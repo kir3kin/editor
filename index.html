@@ -10,59 +10,72 @@
 <body>
 	<div class="container-fluid">
 		<div class="container">
-			<h1>Редактор списка фраз</h1>
 			<div id="editor" class="clearfix">
+			<!-- monitoring panel -->
+			<!-- <div class="monitoring" title="Для поверхностной отладки в консоли">
+				<p>Мониториг:</p>
+				<button id="history" title="Предпочтительно для небольшого количества строк">История</button>
+				<button id="history-count" title="Общее количество элементов в истории">Размер истории</button>
+				<button id="global-index" title="Индекс истории">Глобальный индекс</button>
+				<button id="count" title="Общее количество редактируемых строк">Количество элементов</button>
+			</div> -->
+			<!-- //monitoring panel// -->
+			<h1>Редактор списка фраз</h1>
 				<div class="control-panel">
-					<h2>Общие функции</h2>
-					<button class="undo-but">Назад</button>
-					<button class="redo-but">Впёред</button>
-					<button class="original-but">Исходный текст</button>
-					<button class="clear-but">Очистить поле</button>
-					<button class="copy-but">Скопировать в буфер обмена</button>
-					<div class="clearfix"></div>
-					<h3>Замена</h3>
-					<label for="find">Что заменить</label>
-					<input type="text" id="find">
-					<div class="clearfix"></div>
-					<label for="replace">На что заменить</label>
-					<input type="text" id="replace">
-					<div class="clearfix"></div>
-					<label for="case-sensive">Регистро-чуствительный поиск</label>
-					<input type="checkbox" id="case-sensive">
-					<button class='find-replace-but'>Найти и заменить</button>
-					<div class="clearfix"></div>
-
-					<h2>Функции обработки текста</h2>
-					<button class="upper-but">Верхний регистр</button>
-					<button class="lower-but">Нижний регистр</button>
-					<button class="capit-but">Все слова с большой</button>
-					<button class="capit-first-but">Первое слово с большой</button>
-					<button class="add-plus-but">Добавить плюсы перед словами</button>
-					<button class="del-plus-but">Удалить плюсы перед словами</button>
-					<button class="add-quot-but">Добавить кавычки</button>
-					<button class="add-brackets-but">Добавить скобки</button>
-					<button class="add-dash-but">Добавить тире</button>
-					<button class="add-dash-quot-but">Добавить кавычки и скобки</button>
-					<button class="add-dash-brackets-but">Добавить тире и скобки</button>
-
-					<button class="del-spaces-but">Удалить лишние пробелы</button>
-					<button class="del-tabs-but">Удалить табуляцию</button>
-					<button class="del-space-dash-but">Удалить после "пробел дефис"</button>
-					<button class="replace-space-but">Заменить пробелы на "_"</button>
-					<button class="del-special-but">Удалить спец символы</button>
-					<button class="replace-special-but">Заменить спец символы на пробел</button>
-					<button class="sort-but">Сортировать по возрастанию(от А-Я)</button>
-					<button class="reverse-sort-but">Сортировать по убыванию(от Я-А)</button>
-					<button class="del-duplicate-but">Удалить дупликаты</button>
+					<div class="common-function clearfix">
+						<h2>Общие функции</h2>
+						<button data-action="Undo" data-info="no-save">Назад</button>
+						<button data-action="Redo" data-info="no-save">Впёред</button>
+						<button data-action="Clear">Очистить поле</button>
+						<button data-action="Copy" data-info="no-save">Скопировать в буфер обмена</button>
+						<button data-action="RefreshHistory" data-info="no-save" title="Рекомендуеться применить при совершении больше 20-ти операций редактирования">Обновить историю</button>
+					</div>
+					<div class="find-replace clearfix">
+						<div class="find-field">
+							<label for="find">Найти</label>
+							<input type="text" id="find">
+						</div>
+						<div class="replace-field">
+							<label for="replace">Заменить на</label>
+							<input type="text" id="replace">
+						</div>
+						<div class="sensative-field clearfix">
+							<label for="case-sensative">Регистро-чувствительный поиск</label>
+							<input type="checkbox" id="case-sensative">
+						</div>
+						<button data-action="FindReplace">Найти и заменить</button>
+					</div>
+					<div class="edit-functions clearfix">
+						<h2>Функции обработки текста</h2>
+						<button data-action="UpperCase">Верхний регистр</button>
+						<button data-action="Capitalize">Все слова с большой</button>
+						<button data-action="LowerCase">Нижний регистр</button>
+						<button data-action="CapitalizeFirst">Первое слово с большой</button>
+						<h2>Дополнительные функции обработки</h2>
+						<div class="dop-functions">
+							<button data-action="AddPlus" class="add-plus-but">Добавить плюсы перед словами</button>
+							<button data-action="DelPlus" class="del-plus-but">Удалить плюсы перед словами</button>
+							<button data-action="AddDash" class="add-dash-but">Добавить тире</button>
+							<button data-action="AddQuot" class="add-quot-but">Добавить кавычки</button>
+							<button data-action="AddBrackets" class="add-brackets-but">Добавить скобки</button>
+							<button data-action="DelSpecial" class="del-special-but">Удалить спец символы</button>
+							<button data-action="AddDashQuot" class="add-dash-quot-but">Добавить тире и кавычки</button>
+							<button data-action="AddDashBrackets" class="add-dash-brackets-but">Добавить тире и скобки</button>
+							<button data-action="ReplaceSpecial" class="replace-special-but">Заменить спец символы</button>
+							<button data-action="DelSpaces" class="del-spaces-but">Удалить лишние пробелы</button>
+							<button data-action="DelTabs" class="del-tabs-but">Удалить табуляцию</button>
+							<button data-action="Sort" class="sort-but">Сортировать от А-Я</button>
+							<button data-action="ReplaceSpace" class="replace-space-but">Заменить пробелы на "_"</button>
+							<button data-action="DelSpaceDash" class="del-space-dash-but">Удалить после "пробел дефис"</button>
+							<button data-action="ReverseSort" class="reverse-sort-but">Сортировать от Я-А</button>
+							<button data-action="DelDuplicate" class="del-duplicate-but">Удалить дупликаты</button>
+						</div>
+					</div>
 				</div>
-				<div class="text-panel">
-					<textarea id="edit-field" placeholder="Please enter your text">Hello DoLLy</textarea>
-				</div>
+				<textarea id="edit-field" placeholder="Please enter your text">Hello DoLLy</textarea>
 			</div>
 		</div>
 	</div>
-
-
 	<script src="main.js"></script>
 </body>
 </html>

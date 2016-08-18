@@ -1,369 +1,239 @@
 /**
-* @Phrathes editor
+* @Phrase Editor
 * @author: Igor Ahabanin (kir3kin@gmail.com)
 * @version: 1.0
 */
-var mainField = document.getElementById('edit-field');
-if (!mainField) console.error("Main field for Editor is unavailable");
-mainField.addEventListener("change", getSave);
+var editor = document.getElementById('editor');//			editor's body
+PhraseEditor(editor);//																Initializing pharse editor
+// var anchor = new PhraseEditor(editor);//							for monitoring panel
 
-var originalText;
-var postEditText;
-var historyActivity = [];
-var globalIndex = -1;
+function PhraseEditor(editor) {
+	var self = this;
 
+	//=== editor field ===//
+	this.mainField = document.getElementById('edit-field');
+	if (!self.mainField) console.error("Main field for Editor is unavailable");
 
-if (mainField.value) {
-	originalText = mainField.value;
-	getSave();
-} else {
-	originalText = "";
-}
+	this.historyActivity = [];
+	this.globalIndex = -1;
 
+	//=== service functions ===//
+	this.setIndex = function() {
+		var index;
+		if (self.globalIndex < 0) index = self.historyActivity.length;
+		else index = ++self.globalIndex;
+		return index;
+	};
 
+	this.setHistory = function(value, index) {
+		if (self.historyActivity[index - 1] === value) return;
+		if (self.historyActivity[index] === value) return;
+		self.historyActivity.splice(index, 0, value);
+	};
 
-// editor
-var editor = document.getElementById('editor');
+	this.getSave = function() {
+		var index = self.setIndex();
+		self.setHistory(self.mainField.value, index);
+	};
 
-// editor.addEventListener("click", delegationEvent);
+	//======================//
+	//=== Edit functions ===//
+	//======================//
+	// common function
+	//================
+	this.getUpperCase = function() {
+		self.mainField.value = self.mainField.value.replace(/.+/gim, function(match) {
+			return match.toUpperCase();
+		});
+	};
 
+	this.getLowerCase = function() {
+		self.mainField.value = self.mainField.value.replace(/.+/gim, function(match) {
+			return match.toLowerCase();
+		});
+	};
 
+	this.getCapitalize = function() {
+		editText = self.mainField.value.toLowerCase();
+		self.mainField.value = editText.replace(/[^a-zа-я][а-яa-z]|^[a-zа-я]/gim, function(match) {
+			return match.toUpperCase();
+		});
+	};
 
+	this.getCapitalizeFirst = function() {
+		editText = self.mainField.value.toLowerCase();
+		self.mainField.value = editText.replace(/^[^a-zа-я]*[a-zа-я]/gm, function(match) {
+			return match.toUpperCase();
+		});
+	};
 
-
-function delegationEvent() {
-
-}
-
-// controls button
-var controlsButton = {
-	Original: editor.getElementsByClassName('original-but')[0],
-	Clear: editor.getElementsByClassName('clear-but')[0],
-	Copy: editor.getElementsByClassName('copy-but')[0],
-	FindReplace: editor.getElementsByClassName('find-replace-but')[0],
-	Undo: editor.getElementsByClassName('undo-but')[0],
-	Redo: editor.getElementsByClassName('redo-but')[0],
-
-	UpperCase: editor.getElementsByClassName('upper-but')[0],
-	LowerCase: editor.getElementsByClassName('lower-but')[0],
-	Capitalize: editor.getElementsByClassName('capit-but')[0],
-	CapitalizeFirst: editor.getElementsByClassName('capit-first-but')[0],
-	AddPlus: editor.getElementsByClassName("add-plus-but")[0],
-	DelPlus: editor.getElementsByClassName("del-plus-but")[0],
-	AddQuot: editor.getElementsByClassName("add-quot-but")[0],
-	AddBrackets: editor.getElementsByClassName("add-brackets-but")[0],
-	AddDash: editor.getElementsByClassName("add-dash-but")[0],
-	AddDashQuot: editor.getElementsByClassName("add-dash-quot-but")[0],
-	AddDashBrackets: editor.getElementsByClassName("add-dash-brackets-but")[0],
-
-	DelSpaces: editor.getElementsByClassName("del-spaces-but")[0],
-	DelTabs: editor.getElementsByClassName("del-tabs-but")[0],
-	DelSpaceDash: editor.getElementsByClassName("del-space-dash-but")[0],
-	ReplaceSpace: editor.getElementsByClassName("replace-space-but")[0],
-	DelSpecial: editor.getElementsByClassName("del-special-but")[0],
-	ReplaceSpecial: editor.getElementsByClassName("replace-special-but")[0],
-
-
-	Sort: editor.getElementsByClassName("sort-but")[0],
-	ReverseSort: editor.getElementsByClassName("reverse-sort-but")[0],
-	DelDuplicate: editor.getElementsByClassName("del-duplicate-but")[0],
-};
-
-// controlsButton.Original.addEventListener("click", getOriginal);
-// controlsButton.Clear.addEventListener("click", getClear);
-// controlsButton.Copy.addEventListener("click", getCopy);
-// controlsButton.FindReplace.addEventListener("click", getFindReplace);
-// controlsButton.Undo.addEventListener("click", getUndo);//заменить на делегирование
-// controlsButton.Redo.addEventListener("click", getRedo);//заменить на делегирование
-
-// controlsButton.UpperCase.addEventListener("click", getUpperCase);
-// controlsButton.LowerCase.addEventListener("click", getLowerCase);
-// controlsButton.Capitalize.addEventListener("click", getCapitalize);
-// controlsButton.CapitalizeFirst.addEventListener("click", getCapitalizeFirst);
-// controlsButton.AddPlus.addEventListener("click", getAddPlus);
-// controlsButton.DelPlus.addEventListener("click", getDelPlus);
-// controlsButton.AddQuot.addEventListener("click", getAddQuot);
-// controlsButton.AddBrackets.addEventListener("click", getAddBrackets);
-// controlsButton.AddDash.addEventListener("click", getAddDash);
-// controlsButton.AddDashQuot.addEventListener("click", getAddDashQuot);
-// controlsButton.AddDashBrackets.addEventListener("click", getAddDashBrackets);
-
-// controlsButton.DelSpaces.addEventListener("click", getDelSpaces);
-// controlsButton.DelTabs.addEventListener("click", getDelTabs);
-// controlsButton.DelSpaceDash.addEventListener("click", getDelSpaceDash);
-// controlsButton.ReplaceSpace.addEventListener("click", getReplaceSpace);
-// controlsButton.DelSpecial.addEventListener("click", getDelSpecial);
-// controlsButton.ReplaceSpecial.addEventListener("click", getReplaceSpecial);
-
-// controlsButton.Sort.addEventListener("click", getSort);
-// controlsButton.ReverseSort.addEventListener("click", getReverseSort);
-// controlsButton.DelDuplicate.addEventListener("click", getDelDuplicate);
-
-function setIndex() {
-	var index;
-	if (globalIndex < 0) {
-		index = historyActivity.length;
-	} else {
-		index = ++globalIndex;
-	}
-	return index;
-}
-
-function setHistory(value, index) {
-	if (historyActivity[index - 1] === value) return;
-	if (historyActivity[index] === value) return;
-	historyActivity.splice(index, 0, value);
-}
-
-// edit functions
-function getOriginal() {
-	mainField.value = originalText;
-}
-
-function getUpperCase() {
-	if (!originalText) return;
-	var index = setIndex();
-	mainField.value = originalText.replace(/.+/gim, function(match) {
-		return match.toUpperCase();
-	});
-	setHistory(mainField.value, index);
-}
-
-function getLowerCase() {
-	if (!originalText) return;
-	var index = setIndex();
-	mainField.value = originalText.replace(/.+/gim, function(match) {
-		return match.toLowerCase();
-	});
-	setHistory(mainField.value, index);
-}
-
-function getCapitalize() {
-	if (!originalText) return;
-	var index = setIndex();
-	editText = originalText.toLowerCase();
-	mainField.value = editText.replace(/[^a-zа-я][а-яa-z]|^[a-zа-я]/gim, function(match) {
-		return match.toUpperCase();
-	});
-	setHistory(mainField.value, index);
-}
-
-function getCapitalizeFirst() {
-	if (!originalText) return;
-	var index = setIndex();
-	editText = originalText.toLowerCase();
-	mainField.value = editText.replace(/^[^a-zа-я]*[a-zа-я]/gm, function(match) {
-		return match.toUpperCase();
-	});
-	setHistory(mainField.value, index);
-}
-
-// add edit functions
-function getAddPlus() {
-	if (!originalText) return;
-	var index = setIndex();
-	mainField.value = originalText.replace(/[а-яa-z]+/gim, function(match) {
-		return "+" + match;
-	});
-	setHistory(mainField.value, index);
-}
-
-function getDelPlus() {
-	if (!originalText) return;
-	var index = setIndex();
-	mainField.value = originalText.replace(/\+[а-яa-z]+/gim, function(match) {
-		return match.slice(1);
-	});
-	setHistory(mainField.value, index);
-}
-
-function getAddQuot() {
-	if (!originalText) return;
-	var index = setIndex();
-	mainField.value = originalText.replace(/.+/gm, function(match) {
-		return "\"" + match + "\"";
-	});
-	setHistory(mainField.value, index);
-}
-
-function getAddBrackets() {
-	if (!originalText) return;
-	var index = setIndex();
-	mainField.value = originalText.replace(/.+/gm, function(match) {
-		return "[" + match + "]";
-	});
-	setHistory(mainField.value, index);
-}
-
-function getAddDash() {
-	if (!originalText) return;
-	var index = setIndex();
-	mainField.value = originalText.replace(/.+/gm, function(match) {
-		return "-" + match;
-	});
-	setHistory(mainField.value, index);
-}
-
-function getAddDashQuot() {
-	if (!originalText) return;
-	var index = setIndex();
-	mainField.value = originalText.replace(/.+/gm, function(match) {
-		return "-\"" + match + "\"";
-	});
-	setHistory(mainField.value, index);
-}
-
-function getAddDashBrackets() {
-	if (!originalText) return;
-	var index = setIndex();
-	mainField.value = originalText.replace(/.+/gm, function(match) {
-		return "-[" + match + "]";
-	});
-	setHistory(mainField.value, index);
-}
-
-function getDelSpaces() {
-	if (!originalText) return;
-	var index = setIndex();
-	var intermediateText = originalText.replace(/^ +| +$/gm, "");
-	mainField.value = intermediateText.replace(/ +/gm, " ");
-	setHistory(mainField.value, index);
-}
-
-function getDelTabs() {
-	if (!originalText) return;
-	var index = setIndex();
-	mainField.value = originalText.replace(/\t/gm, "");
-	setHistory(mainField.value, index);
-}
-
-function getDelSpaceDash() {
-	if (!originalText) return;
-	var index = setIndex();
-	mainField.value = originalText.replace(/ -.*/gm, "");
-	setHistory(mainField.value, index);
-}
-
-function getReplaceSpace() {
-	if (!originalText) return;
-	var index = setIndex();
-	mainField.value = originalText.replace(/ /gm, "_");
-	setHistory(mainField.value, index);
-}
-
-
-function getDelSpecial() {
-	if (!originalText) return;
-	var index = setIndex();
-	mainField.value = originalText.replace(/[\(\)`~!@#\$%\^&\*_=\+\[\]\{\}\|;':",\/<>\?\\]/gm, "");
-	setHistory(mainField.value, index);
-}
-
-
-function getReplaceSpecial() {
-	if (!originalText) return;
-	var index = setIndex();
-	mainField.value = originalText.replace(/[\(\)`~!@#\$%\^&\*_=\+\[\]\{\}\|;':",\/<>\?\\]/gm, " ");
-	setHistory(mainField.value, index);
-}
-
-function getSort() {
-	if (!originalText) return;
-	var index = setIndex();
-	var interM = originalText.split("\n");
-	for (var i = interM.length; i >= 0; i--) {
-		if (!interM[i]) interM.splice(i, 1);
-	}
-	mainField.value = interM.sort().join("\n");
-	setHistory(mainField.value, index);
-}
-
-function getReverseSort() {
-	if (!originalText) return;
-	var index = setIndex();
-	var interM = originalText.split("\n");
-	for (var i = interM.length; i >= 0; i--) {
-		if (!interM[i]) interM.splice(i, 1);
+	this.getRefreshHistory = function() {
+		self.historyActivity = [];
+		self.globalIndex = -1;
+		self.getSave();
 	}
 
-	mainField.value = interM.sort(function(a, b) {
-		if (a < b) return 1;
-		if (a > b) return -1;
-		if (a = b) return 0;
-	}).join("\n")
-	setHistory(mainField.value, index);
-}
+	// add edit functions
+	this.getAddPlus = function() {
+		self.mainField.value = self.mainField.value.replace(/[а-яa-z]+/gim, function(match) {
+			return "+" + match;
+		});
+	};
 
-function getDelDuplicate() {
-	if (!originalText) return;
-	var index = setIndex();
-	var interM = originalText.split("\n");
-	for (var i = interM.length; i >= 0; i--) {
-		if (!interM[i]) interM.splice(i, 1);
+	this.getDelPlus = function() {
+		self.mainField.value = self.mainField.value.replace(/\+[а-яa-z]+/gim, function(match) {
+			return match.slice(1);
+		});
+	};
+
+	this.getAddQuot = function() {
+		self.mainField.value = self.mainField.value.replace(/^[\["-]*([a-zа-я\d\s.,]+?["-\[\]]*?[a-zа-я\d\s.,]+?)[\]\n"-]*$/gim, "\"$1\"");
+	};
+
+	this.getAddBrackets = function() {
+		self.mainField.value = self.mainField.value.replace(/^[\["-]*([a-zа-я\d\s.,]+?["-\[\]]*?[a-zа-я\d\s.,]+?)[\]\n"-]*$/gim, "[$1]");
+	};
+
+	this.getAddDash = function() {
+		self.mainField.value = self.mainField.value.replace(/^[\["-]*([a-zа-я\d\s.,]+?["-\[\]]*?[a-zа-я\d\s.,]+?)[\]\n"-]*$/gim, "-$1");
+	};
+
+	this.getAddDashQuot = function() {
+		self.mainField.value = self.mainField.value.replace(/^[\["-]*([a-zа-я\d\s.,]+?["-\[\]]*?[a-zа-я\d\s.,]+?)[\]\n"-]*$/gim, "-\"$1\"");
+	};
+
+	this.getAddDashBrackets = function() {
+		self.mainField.value = self.mainField.value.replace(/^[\["-]*([a-zа-я\d\s.,]+?["-\[\]]*?[a-zа-я\d\s.,]+?)[\]\n"-]*$/gim, "-[$1]");
+	};
+
+	this.getDelSpaces = function() {
+		var intermediateText = self.mainField.value.replace(/^ +| +$/gm, "");
+		self.mainField.value = intermediateText.replace(/ +/gm, " ");
+	};
+
+	this.getDelTabs = function() {
+		self.mainField.value = self.mainField.value.replace(/\t/gm, "");
+	};
+
+	this.getDelSpaceDash = function() {
+		self.mainField.value = self.mainField.value.replace(/ -.*/gm, "");
+	};
+
+	this.getReplaceSpace = function() {
+		self.mainField.value = self.mainField.value.replace(/ /gm, "_");
+	};
+
+	this.getDelSpecial = function() {
+		self.mainField.value = self.mainField.value.replace(/[\(\)`~!@#\$%\^&\*_=\+\[\]\{\}\|;':",\/<>\?\\]/gm, "");
+	};
+
+	this.getReplaceSpecial = function() {
+		self.mainField.value = self.mainField.value.replace(/[\(\)`~!@#\$%\^&\*_=\+\[\]\{\}\|;':",\/<>\?\\]/gm, " ");
+	};
+
+	this.setDelEmptyLine = function(interM) {
+		for (var i = interM.length; i >= 0; i--) {
+			if (!interM[i]) interM.splice(i, 1);
+		}
+		return interM;
 	}
 
-	// var n = interM.length, B = [];
-	// for (var i = 1, j = 0, t; i < n+1; i++) {
-	// 	if (interM[i - 1] === interM[i]) t = interM[i-1];
-	// 	if (interM[i-1] !== t) B[j++] = interM[i-1];
-	// }
-	// mainField.value = B.join("\n");
+	this.getSort = function() {
+		var interM = self.mainField.value.split("\n");
+		self.setDelEmptyLine(interM);
+		self.mainField.value = interM.sort().join("\n");
+	};
 
-	var obj = {};
-	for (var i = 0; i < interM.length; i++) {
-		var str = interM[i];
-		obj[str] = true;
-	}
-	B = Object.keys(obj);
+	this.getReverseSort = function() {
+		var interM = self.mainField.value.split("\n");
+		self.setDelEmptyLine(interM);
+		self.mainField.value = interM.sort(function(a, b) {
+			if (a < b) return 1;
+			if (a > b) return -1;
+			if (a = b) return 0;
+		}).join("\n")
+	};
 
-	mainField.value = B.join("\n");
-	setHistory(mainField.value, index);
+	this.getDelDuplicate = function() {
+		var obj = {};
+		var interM = self.mainField.value.split("\n");
+		self.setDelEmptyLine(interM);
+		for (var i = 0; i < interM.length; i++) {
+			var str = interM[i];
+			obj[str] = true;
+		}
+		self.mainField.value = Object.keys(obj).join("\n");
+	};
+
+	this.getClear = function() {
+		self.mainField.value = "";
+	};
+
+	this.getCopy = function() {
+		self.mainField.focus();
+		self.mainField.setSelectionRange(0, self.mainField.value.length);
+		var success = document.execCommand('copy');
+		if (!success) console.error('don\'t copy');
+	};
+
+	this.getFindReplace = function() {
+		var elem = document.getElementById('find').value;
+		if(!elem) return;
+		var sensetive = document.getElementById('case-sensative').checked;
+		var pattern = new RegExp(elem, (sensetive)? 'gm' : 'gim');
+		var value = document.getElementById('replace').value || "";
+		self.mainField.value = self.mainField.value.replace(pattern, value);
+	};
+
+	this.getUndo = function() {
+		if (self.globalIndex === -1) {
+			if ((self.historyActivity.length - 1) === 0) return;
+			self.globalIndex = self.historyActivity.length - 1;
+		}
+		if (self.globalIndex <= 0) return;
+		self.globalIndex--;
+		if (self.mainField.value === self.historyActivity[self.globalIndex]) return;
+		self.mainField.value = self.historyActivity[self.globalIndex];
+	};
+
+	this.getRedo = function() {
+		if (self.globalIndex === -1) return;
+		if (self.globalIndex === self.historyActivity.length - 1) return;
+		self.globalIndex++;
+		self.mainField.value = self.historyActivity[self.globalIndex];
+	};
+
+	// initial preparation
+	self.mainField.addEventListener("change", self.getSave);
+	if (self.mainField.value) self.getSave();
+
+	// deligation event
+	editor.onclick = function(e) {
+		var target = e.target;
+		var action = target.getAttribute('data-action');
+		if (target.getAttribute('data-info') !== "no-save") if (!self.mainField.value) return;
+		if (action) {
+			// console.time("action");// время перестановки с сохранением
+			// console.time("without save");// время перестановки без сохранения
+			self["get" + action]();
+			// console.timeEnd("without save");
+			if (target.getAttribute('data-info') !== "no-save") self.getSave();
+			// console.timeEnd("action");
+		}
+	};
 }
 
-function getClear() {
-	mainField.value = "";
-}
-
-function getCopy() {
-	mainField.focus();
-	mainField.setSelectionRange(0, mainField.value.length);
-	var success = document.execCommand('copy');
-	if (!success) console.error('don\'t copy');
-}
-
-function getFindReplace() {
-	if (!originalText) return;
-	var elem = document.getElementById('find').value;
-	if(!elem) return;
-	var index = setIndex();
-	var sensetive = document.getElementById('case-sensive').checked;
-	var pattern = new RegExp(elem, (sensetive)? 'gm' : 'gim');
-	var value = document.getElementById('replace').value || "";
-	mainField.value = originalText.replace(pattern, value);
-	setHistory(mainField.value, index);
-}
-
-function getUndo() {
-	if (globalIndex === -1) {
-		if ((historyActivity.length - 1) === 0) return;
-		globalIndex = historyActivity.length - 1;
-	}
-	if (globalIndex <= 0) return;
-	globalIndex--;
-	if (mainField.value === historyActivity[globalIndex]) return;
-	mainField.value = historyActivity[globalIndex];
-}
-
-function getRedo() {
-	if (globalIndex === -1) return;
-	if (globalIndex === historyActivity.length - 1) return;
-	globalIndex++;
-	mainField.value = historyActivity[globalIndex];
-}
-
-
-function getSave() {
-	var index = setIndex();
-	originalText = mainField.value;
-	setHistory(mainField.value, index);
-}
+//==== Monitoring panel ====//
+// document.getElementById('history').onclick = function() {
+// 	console.warn(anchor.historyActivity);
+// };
+// document.getElementById('history-count').onclick = function() {
+// 	console.warn("Всего элементов истории: " + anchor.historyActivity.length);
+// };
+// document.getElementById('count').onclick = function() {
+// 	console.warn("Всего редактируемых строк: " + anchor.mainField.value.split("\n").length);
+// };
+// document.getElementById('global-index').onclick = function() {
+// 	console.warn("Индекс истории: " + anchor.globalIndex);
+// };
+//=== /Monitoring panel/ ===//

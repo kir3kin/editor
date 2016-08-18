@@ -1,6 +1,8 @@
 body {
 	font-size: 14px;
 	box-sizing: border-box;
+	background: url(background/cheap_diagonal_fabric.png);
+	font-family: Arial, sans-serif;
 }
 
 .clearfix::after {
@@ -14,49 +16,133 @@ body {
 }
 
 .container {
-	width: 970px;
+	width: 1200px;
 	margin: 0 auto;
-	padding: 20px 0;
+	padding: 0;
 }
 
 #editor {
 	margin-top: 20px;
 }
 
-.control-panel,
+#editor h1 {
+	margin-left: 20px;
+	font-style: italic;
+	font-size: 1.7em;
+	text-transform: uppercase;
+	color: rgba(0,0,0,.7);
+}
+
+#editor .control-panel,
 #edit-field {
 	min-height: 400px;
-	min-width: 200px;
 	padding: 5px;
 	float: left;
 	border: 1px solid #000;
-	border-radius: 3px;
+	border-radius: 5px;
 }
 
-.control-panel {
-	width: 320px;
+#editor .control-panel {
+	width: 30%;
+	background: rgba(0,0,0,.2);
 }
 
-.control-panel h2 {
+#editor .control-panel h2 {
 	text-align: center;
-	margin: 0;
-	font-size: 1.4em;
+	margin: 5px 0;
+	font-size: 1.2em;
 }
 
-.control-panel button {
+#editor .control-panel button {
 	float: left;
-	/*display: block;*/
 	width: 50%;
+	display: block;
 	margin-bottom: 5px;
-	font-size: 12px;
-	height: 50px;
+	font-size: 11px;
+	height: 30px;
 	overflow: hidden;
 	vertical-align: middle;
+	cursor: pointer;
+}
+
+#editor .common-function button:last-of-type{
+	width: 50%;
+	float: none;
+	margin: 0 auto 5px;
+}
+
+#editor .find-replace {
+	text-align: center;
+}
+
+#editor .find-replace input {
+	display: block;
+	width: 90%;
+	margin: 3px auto;
+	padding: 5px;
+	font-size: .8em;
+	border: none;
+	border-radius: 5px;
+}
+
+#editor .find-replace label {
+	margin-bottom: 5px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+#editor .find-replace button {
+	width: 50%;
+	float: none;
+	margin: 5px auto 0;
+}
+
+#editor .find-field,
+#editor .replace-field {
+	width: 50%;
+}
+
+#editor .find-field {
+	float: left;
+}
+
+#editor .replace-field {
+	float: right;
+}
+
+#editor .sensative-field {
+	text-align: center;
+}
+
+#editor .sensative-field input[type=checkbox],
+#editor .sensative-field label {
+	display: inline;
+	width: auto;
+}
+
+#editor .sensative-field input[type=checkbox] {
+	cursor: pointer;
+	margin-left: 10px;
+}
+
+#editor .dop-functions button {
+	width: 33%;
+	height: 40px;
+}
+
+#editor .dop-functions button:last-of-type {
+	width: 50%;
+	float: none;
+	margin: 0 auto;
+	display: block;
 }
 
 #edit-field {
-	width: auto;
-	margin-left: 10px;
+	max-width: 65%;
+	max-height: 650px;
+	min-width: 300px;
+	min-height: 500px;
+	margin-left: 1%;
 	white-space: pre;
 	font-size: 14px;
 }
@@ -64,3 +150,43 @@ body {
 #edit-field::-moz-placeholder {
 	opacity: 1;
 }
+
+/*===== Monitoring panel =====*/
+/*#editor .monitoring {
+	position: fixed;
+	left: 0;
+	top: 100px;
+	width: auto;
+	display: inline-block;
+	padding: 10px 10px;
+	border: 1px solid #aaa;
+	border-radius: 10px;
+	background: rgba(0,0,0,.3);
+	font-size: 14px;
+	opacity: .5;
+	font-family: Arial, sans-serif;
+	transition: opacity .3s;
+}
+#editor .monitoring:hover { opacity: 1; }
+#editor .monitoring p {
+	display: block;
+	font-size: 16px;
+	text-align: center;
+	font-weight: bold;
+	margin: 0 auto 10px;
+	transition: opacity .3s;
+}
+#editor .monitoring button {
+	display: block;
+	padding: 3px;
+	border-radius: 5px;
+	border: none;
+	font-size: 14px;
+	margin: 0 auto 10px;
+	cursor: pointer;
+	opacity: .5;
+	transition: opacity .3s;
+}
+#editor .monitoring button:last-of-type { margin-bottom: 0; }
+#editor .monitoring button:hover { opacity: 1; }*/
+/*=== //Monitoring panel// ===*/
