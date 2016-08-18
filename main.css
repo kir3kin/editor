@@ -1,0 +1,66 @@
+body {
+	font-size: 14px;
+	box-sizing: border-box;
+}
+
+.clearfix::after {
+	content: '';
+	display: table;
+	clear: both;
+}
+
+.container-fluid {
+	width: 100%;
+}
+
+.container {
+	width: 970px;
+	margin: 0 auto;
+	padding: 20px 0;
+}
+
+#editor {
+	margin-top: 20px;
+}
+
+.control-panel,
+#edit-field {
+	min-height: 400px;
+	min-width: 200px;
+	padding: 5px;
+	float: left;
+	border: 1px solid #000;
+	border-radius: 3px;
+}
+
+.control-panel {
+	width: 320px;
+}
+
+.control-panel h2 {
+	text-align: center;
+	margin: 0;
+	font-size: 1.4em;
+}
+
+.control-panel button {
+	float: left;
+	/*display: block;*/
+	width: 50%;
+	margin-bottom: 5px;
+	font-size: 12px;
+	height: 50px;
+	overflow: hidden;
+	vertical-align: middle;
+}
+
+#edit-field {
+	width: auto;
+	margin-left: 10px;
+	white-space: pre;
+	font-size: 14px;
+}
+
+#edit-field::-moz-placeholder {
+	opacity: 1;
+}

@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Редактор фраз</title>
+	<link rel="stylesheet" href="main.css">
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="container">
+			<h1>Редактор списка фраз</h1>
+			<div id="editor" class="clearfix">
+				<div class="control-panel">
+					<h2>Общие функции</h2>
+					<button class="undo-but">Назад</button>
+					<button class="redo-but">Впёред</button>
+					<button class="original-but">Исходный текст</button>
+					<button class="clear-but">Очистить поле</button>
+					<button class="copy-but">Скопировать в буфер обмена</button>
+					<div class="clearfix"></div>
+					<h3>Замена</h3>
+					<label for="find">Что заменить</label>
+					<input type="text" id="find">
+					<div class="clearfix"></div>
+					<label for="replace">На что заменить</label>
+					<input type="text" id="replace">
+					<div class="clearfix"></div>
+					<label for="case-sensive">Регистро-чуствительный поиск</label>
+					<input type="checkbox" id="case-sensive">
+					<button class='find-replace-but'>Найти и заменить</button>
+					<div class="clearfix"></div>
+
+					<h2>Функции обработки текста</h2>
+					<button class="upper-but">Верхний регистр</button>
+					<button class="lower-but">Нижний регистр</button>
+					<button class="capit-but">Все слова с большой</button>
+					<button class="capit-first-but">Первое слово с большой</button>
+					<button class="add-plus-but">Добавить плюсы перед словами</button>
+					<button class="del-plus-but">Удалить плюсы перед словами</button>
+					<button class="add-quot-but">Добавить кавычки</button>
+					<button class="add-brackets-but">Добавить скобки</button>
+					<button class="add-dash-but">Добавить тире</button>
+					<button class="add-dash-quot-but">Добавить кавычки и скобки</button>
+					<button class="add-dash-brackets-but">Добавить тире и скобки</button>
+
+					<button class="del-spaces-but">Удалить лишние пробелы</button>
+					<button class="del-tabs-but">Удалить табуляцию</button>
+					<button class="del-space-dash-but">Удалить после "пробел дефис"</button>
+					<button class="replace-space-but">Заменить пробелы на "_"</button>
+					<button class="del-special-but">Удалить спец символы</button>
+					<button class="replace-special-but">Заменить спец символы на пробел</button>
+					<button class="sort-but">Сортировать по возрастанию(от А-Я)</button>
+					<button class="reverse-sort-but">Сортировать по убыванию(от Я-А)</button>
+					<button class="del-duplicate-but">Удалить дупликаты</button>
+				</div>
+				<div class="text-panel">
+					<textarea id="edit-field" placeholder="Please enter your text">Hello DoLLy</textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script src="main.js"></script>
+</body>
+</html>
